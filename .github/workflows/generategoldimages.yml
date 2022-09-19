@@ -23,6 +23,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: install ansible dependencies
+        run: |
+          ansible --version
+          pipx inject ansible-core requests
       - name: run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
