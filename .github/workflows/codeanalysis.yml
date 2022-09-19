@@ -31,4 +31,4 @@ jobs:
         with:
           command_string: "convert sonarqube2hdf -n ${{ env.SONARQUBE_PROJECT_KEY }} -u ${{ secrets.SONARQUBE_HOST }} --auth ${{ secrets.SONARQUBE_TOKEN }} -o sonarqube-hdf.json"
       - name: upload sonarqube hdf to heimdall
-        run: 'curl --show-error --fail -F "data=@sonarqube-hdf.json" -F "public=true" -H "Authorization: ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"'
+        run: 'curl --show-error --fail --insecure -F "data=@sonarqube-hdf.json" -F "public=true" -H "Authorization: ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"'
