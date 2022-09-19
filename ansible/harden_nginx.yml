@@ -1,0 +1,37 @@
+---
+- name: Harden NGINX playbook
+  hosts: localhost
+  tasks:
+    - name: Log into ironbank
+      community.docker.docker_login:
+        registry_url: registry1.dso.mil
+        reauthorize: true
+        username: "{{ lookup('env', 'IRONBANK_USERNAME') }}"
+        password: "{{ lookup('env', 'IRONBANK_TOKEN') }}"
+
+    - name: Create ironbank nginx container
+      community.general.docker_container:
+        name: ironbank_nginx_1_23_1
+        image: registry1.dso.mil/ironbank/opensource/nginx/nginx
+        pull: true
+
+    - name: Add container to inventory
+      ansible.builtin.add_host:
+        name: ironbank_nginx_1_23_1
+        groups: base_containers
+        ansible_connection: docker
+        ansible_user: nginx
+      changed_when: false
+
+    - name: List hosts
+      debug:
+        msg: "{{ item }}"
+      with_inventory_hostnames:
+        - all
+
+    - name: Create test directory
+      delegate_to: "{{ item }}"
+      loop: "{{ groups['base_containers'] }}"
+      ansible.builtin.file:
+        path: "/tmp/make_this_other_dir"
+        state: directory

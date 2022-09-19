@@ -1,0 +1,30 @@
+name: Generate gold images and put them in the registry
+
+# default nginx on default ubuntu, default nginx on hardened? ubuntu, hardened nginx on hardened? ubuntu, default nginx on ironbank "pre-hardened" ubi8, hardened nginx on ironbank ubi8
+# question: would ubuntu hardening work on debian?  seems like default nginxs are on there or alpine
+
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  IRONBANK_USERNAME: ${{ secrets.IRONBANK_USERNAME }}
+  IRONBANK_TOKEN: ${{ secrets.IRONBANK_TOKEN }}
+
+jobs:
+  generate_gold_image:
+    name: Generate gold image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: run playbook
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: harden_nginx.yml
+          directory: ./ansible
