@@ -26,11 +26,10 @@ jobs:
       - name: set up python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.8' # ansible is apparently installed via pipx, and the version of python being used there is 3.8
       - name: install ansible dependencies
         run: |
-          ansible --version
-          pipx inject ansible-core requests
+          pipx inject ansible-core requests docker
       - name: run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
