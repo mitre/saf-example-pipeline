@@ -8,6 +8,9 @@ on:
     types: [opened, synchronize, reopened]
   workflow_call:
 
+env:
+  SONARQUBE_PROJECT_KEY: "saf-example-pipeline"
+
 jobs:
   code_analysis:
     name: Code analysis
@@ -22,4 +25,10 @@ jobs:
         with:
           host: ${{ secrets.SONARQUBE_HOST }}
           login: ${{ secrets.SONARQUBE_TOKEN }}
-          projectKey: "saf-example-pipeline"
+          projectKey: ${{ env.SONARQUBE_PROJECT_KEY }}
+      - name: convert sonarqube scan to hdf
+        uses: mitre/saf_action@v1
+        with:
+          command_string: "convert sonarqube2hdf -n ${{ env.SONARQUBE_PROJECT_KEY }} -u ${{ secrets.SONARQUBE_HOST }} --auth ${{ secrets.SONARQUBE_TOKEN }} -o sonarqube-hdf.json"
+      - name: upload sonarqube hdf to heimdall
+        run: 'curl --show-error --fail -F "data=@sonarqube-hdf.json" -F "public=true" -H "Authorization: ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"'
