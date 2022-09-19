@@ -7,8 +7,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_call:
-    types:
-      - requested
+    types: [requested]
 
 jobs:
   code_analysis:
