@@ -1,0 +1,28 @@
+name: Code analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_call:
+    types:
+      - requested
+
+jobs:
+  code_analysis:
+    name: Code analysis
+    runs-on: ubuntu-20.04
+    steps:
+      - name: check out
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: sonarqube scan
+        uses: kitabisa/sonarqube-action@v1.2.0
+        with:
+          host: ${{ secrets.SONARQUBE_HOST }}
+          login: ${{ secrets.SONARQUBE_TOKEN }}
+          projectBaseDir: "src/"
+          projectKey: "saf-example-pipeline"
