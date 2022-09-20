@@ -34,10 +34,17 @@ jobs:
         with:
           playbook: harden_nginx.yml
           directory: ./ansible
-      - name: Create images
+      - name: Create images # probably come up with some way to loop this across all the base images we wanna generate
         run: |
           docker build -t app_on_hardened_nginx_on_ubi8:v1 . -f-<<EOF
           FROM ironbank_nginx_1_23_1_hardened
           COPY src /etc/nginx/html
           EOF
-          docker image ls
+      - name: Push to ironbank base to GHCR # think this one is just gonna have to be fully manual
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: app_on_hardened_nginx_on_ubi8
+          tags: v1
+          registry: ghrc.io/${{ github.repository_owner }}
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
