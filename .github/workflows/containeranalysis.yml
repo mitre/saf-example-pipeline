@@ -37,4 +37,6 @@ jobs:
           command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
       - name: Upload trivy hdf to heimdall
         run: |
+          ls -lah
+          jq '.' trivy-hdf.json
           curl --show-error --fail --insecure -F "data=@trivy-hdf.json" -F "filename=app_on_hardened_nginx_on_ubi8-trivy-hdf.json" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"
