@@ -6,6 +6,10 @@ on:
   workflow_call:
   workflow_dispatch:
 
+env:
+  AWS_REGION: 'na'
+  AWS_ACCOUNT_ID: '00000'
+
 jobs:
   inspec_os_rhel:
     name: Run RHEL8 profile
