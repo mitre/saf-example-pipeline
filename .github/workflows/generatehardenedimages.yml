@@ -1,12 +1,11 @@
-name: Generate gold images and put them in the registry
-
-# default nginx on default ubuntu, default nginx on hardened? ubuntu, hardened nginx on hardened? ubuntu, default nginx on ironbank "pre-hardened" ubi8, hardened nginx on ironbank ubi8
-# question: would ubuntu hardening work on debian?  seems like default nginxs are on there or alpine
+name: Generate hardened images and put them in the registry
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened]
   workflow_call:
   workflow_dispatch:
 
@@ -15,23 +14,30 @@ env:
   IRONBANK_TOKEN: ${{ secrets.IRONBANK_TOKEN }}
 
 jobs:
-  generate_gold_image:
-    name: Generate gold image
+  generate_hardened_image:
+    name: Generate hardened image
     runs-on: ubuntu-20.04
     steps:
-      - name: check out
+      - name: Check out
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: set up python
+      - name: Set up python
         uses: actions/setup-python@v4
         with:
           python-version: '3.8' # ansible is apparently installed via pipx, and the version of python being used there is 3.8
-      - name: install ansible dependencies
+      - name: Install ansible dependencies
         run: |
           pipx inject ansible-core requests docker
-      - name: run playbook
+      - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: harden_nginx.yml
           directory: ./ansible
+      - name: Create images
+        run: |
+          docker build -t app_on_hardened_nginx_on_ubi8:v1 . -f-<<EOF
+          FROM ironbank_nginx_1_23_1_hardened
+          COPY src /etc/nginx/html
+          EOF
+          docker image ps

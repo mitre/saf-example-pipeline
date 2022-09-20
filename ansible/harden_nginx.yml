@@ -8,6 +8,7 @@
         reauthorize: true
         username: "{{ lookup('env', 'IRONBANK_USERNAME') }}"
         password: "{{ lookup('env', 'IRONBANK_TOKEN') }}"
+      changed_when: false
 
     - name: Create ironbank nginx container
       community.general.docker_container:
@@ -23,15 +24,14 @@
         ansible_user: nginx
       changed_when: false
 
-    - name: List hosts
-      debug:
-        msg: "{{ item }}"
-      with_inventory_hostnames:
-        - all
-
+    # swap this task out for all the actual hardening content
     - name: Create test directory
       delegate_to: "{{ item }}"
       loop: "{{ groups['base_containers'] }}"
       ansible.builtin.file:
         path: "/tmp/make_this_other_dir"
         state: directory
+
+    - name: Commit hardened image
+      ansible.builtin.command: docker commit "{{ item }}" "{{ item }}_hardened"
+      loop: "{{ groups['base_containers'] }}"
