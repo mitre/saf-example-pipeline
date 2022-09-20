@@ -12,6 +12,7 @@ env:
   CHEF_LICENSE: 'accept-silent'
 
 jobs:
+  # generate threshold file artifacts or something
   inspec_os_rhel:
     name: Run RHEL8 profile
     runs-on: ubuntu-20.04
@@ -63,4 +64,5 @@ jobs:
         run: |
           ls -lah
           jq '.' trivy-hdf.json
-          curl --show-error --fail --insecure -F "data=@trivy-hdf.json" -F "filename=app_on_hardened_nginx_on_ubi8-trivy-hdf.json" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"
+          jq '."Aqua Security - Trivy.json"' trivy-hdf.json > actual-trivy-hdf.json
+          curl --show-error --fail --insecure -F "data=@actual-trivy-hdf.json" -F "filename=app_on_hardened_nginx_on_ubi8-trivy-hdf.json" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"
