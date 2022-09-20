@@ -59,6 +59,7 @@ jobs:
         with:
           command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
       - name: Upload trivy hdf to heimdall
+        if: success() || failure()
         run: |
           ls -lah
           jq '.' trivy-hdf.json
