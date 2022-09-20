@@ -52,7 +52,9 @@ jobs:
           format: 'template'
           template: '@/contrib/asff.tpl'
           output: 'trivy-asff.json'
+          exit-code: '1'
       - name: Convert trivy scan to hdf # this is not generating correct output atm for some reason
+        if: success() || failure()
         uses: mitre/saf_action@v1
         with:
           command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
