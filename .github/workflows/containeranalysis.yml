@@ -16,7 +16,14 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Install inspec
-        run: echo 'hello'
+        run: curl https://omnitruck.chef.io/install.sh | sudo bash -s -- -P inspec
+      - name: Run scan
+        run: |
+          container_id=$(docker run -p 80:8080 -p 443:8443 --rm -d ghcr.io/mitre/app_on_hardened_nginx_on_ubi8:v1)
+          inspec exec https://github.com/mitre/redhat-enterprise-linux-8-stig-baseline/archive/main.tar.gz -t docker://"$container_id" --reporter=cli json:output.json
+      - name: Upload scan to heimdall
+        run: |
+          curl --show-error --fail --insecure -F "data=@output.json" -F "filename=rhel8profile_on_app_on_hardened_nginx_on_ubi8.json" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"
   inspec_nginx:
     name: Run NGINX profile
     runs-on: ubuntu-20.04
@@ -35,7 +42,7 @@ jobs:
           format: 'template'
           template: '@/contrib/asff.tpl'
           output: 'trivy-asff.json'
-      - name: Convert trivy scan to hdf
+      - name: Convert trivy scan to hdf # this is not generating correct output atm for some reason
         uses: mitre/saf_action@v1
         with:
           command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
