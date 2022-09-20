@@ -27,7 +27,7 @@ jobs:
         with:
           image-ref: 'ghcr.io/mitre/app_on_hardened_nginx_on_ubi8:v1'
           scan-type: 'image'
-          format: 'json'
+          format: 'template'
           template: '@/contrib/asff.tpl'
           output: 'trivy-asff.json'
       - name: Convert trivy scan to hdf
