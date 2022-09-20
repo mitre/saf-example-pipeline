@@ -1,0 +1,19 @@
+name: Run the full pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  call_code_analysis:
+    uses: ./.github/workflows/codeanalysis.yml
+    secrets: inherit
+  call_generate_hardened_images:
+    uses: ./.github/workflows/generatehardenedimages.yml
+    secrets: inherit
+  call_container_analysis:
+    uses: ./.github/workflows/containeranalysis.yml
+    secrets: inherit
+    needs: call_generate_hardened_images
