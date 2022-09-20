@@ -17,19 +17,19 @@ jobs:
     name: Code analysis
     runs-on: ubuntu-20.04
     steps:
-      - name: check out
+      - name: Check out
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: sonarqube scan
+      - name: Sonarqube scan
         uses: kitabisa/sonarqube-action@v1.2.0
         with:
           host: ${{ secrets.SONARQUBE_HOST }}
           login: ${{ secrets.SONARQUBE_TOKEN }}
           projectKey: ${{ env.SONARQUBE_PROJECT_KEY }}
-      - name: convert sonarqube scan to hdf
+      - name: Convert sonarqube scan to hdf
         uses: mitre/saf_action@v1
         with:
           command_string: "convert sonarqube2hdf -n ${{ env.SONARQUBE_PROJECT_KEY }} -u ${{ secrets.SONARQUBE_HOST }} --auth ${{ secrets.SONARQUBE_TOKEN }} -o sonarqube-hdf.json"
-      - name: upload sonarqube hdf to heimdall
+      - name: Upload sonarqube hdf to heimdall
         run: 'curl --show-error --fail --insecure -F "data=@sonarqube-hdf.json" -F "filename=${{ github.ref_name }}-sonarqube-hdf.json" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"'

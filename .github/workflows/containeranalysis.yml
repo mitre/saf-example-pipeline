@@ -1,0 +1,43 @@
+name: Container analysis
+
+on:
+  registry_package:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  inspec_os_rhel:
+    name: Run RHEL8 profile
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install inspec
+        run: echo 'hello'
+  inspec_nginx:
+    name: Run NGINX profile
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install inspec
+        run: echo 'hello'
+  trivy:
+    name: Run Trivy scan
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ghcr.io/mitre/app_on_hardened_nginx_on_ubi8:v1'
+          scan-type: 'image'
+          format: 'json'
+          template: '@/contrib/asff.tpl'
+          output: 'trivy-asff.json'
+      - name: Convert trivy scan to hdf
+        uses: mitre/saf_action@v1
+        with:
+          command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
+      - name: Upload trivy hdf to heimdall
+        run: |
+          files=()
+          while read -r file; do
+            files+=(-F "data=@$file")
+          done < <(find trivy-hdf -name '*.json' -type f)
+          curl --show-error --fail --insecure "${$files[@]}" -F "public=true" -H "Authorization: Api-Key ${{ secrets.HEIMDALL_API_KEY }}" "${{ secrets.HEIMDALL_HOST }}/evaluations"
