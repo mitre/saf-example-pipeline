@@ -40,4 +40,4 @@ jobs:
           FROM ironbank_nginx_1_23_1_hardened
           COPY src /etc/nginx/html
           EOF
-          docker image ps
+          docker image ls
