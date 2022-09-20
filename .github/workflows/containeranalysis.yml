@@ -36,8 +36,8 @@ jobs:
           command_string: "convert trivy2hdf -i trivy-asff.json -o trivy-hdf"
       - name: Upload trivy hdf to heimdall
         run: |
-          ls
-          ls trivy-hdf
+          time ls -lah
+          time ls -lah trivy-hdf
           files=()
           while read -r file; do
             files+=(-F "data=@$file")
