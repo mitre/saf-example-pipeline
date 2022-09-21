@@ -149,7 +149,7 @@
     - name: Set the permissions on the "{{ nginx_site_root }}" directory
       file:
         path: "{{ nginx_site_root }}"
-        mode: "1660"
+        mode: "1550"
         owner: "nginx"
         group: "nginx"
       notify: restart nginx

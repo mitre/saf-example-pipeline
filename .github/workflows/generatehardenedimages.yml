@@ -48,7 +48,7 @@ jobs:
           FROM ironbank_nginx_1_23_1_hardened
           COPY src /etc/nginx/html
           USER root
-          RUN chown -R nginx /etc/nginx/html
+          RUN chown -R nginx:nginx /etc/nginx/html
           USER nginx
           EOF
       - name: Push to ironbank base to GHCR # think this one is just gonna have to be manually duplicated for all the images we make unless matrices??
