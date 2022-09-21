@@ -352,19 +352,19 @@
         creates: "/etc/ssl/nginx-selfsigned.crt"
       notify: restart nginx
 
-    - name: Ensure the private key is only readable by 'root'
+    - name: Ensure the private key is only readable by 'nginx'
       file:
         path: "/etc/ssl/nginx-selfsigned.key"
         mode: "0400"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
-    - name: Ensure the crt should only be readable by 'root'
+    - name: Ensure the crt should only be readable by 'nginx'
       file:
         path: "/etc/ssl/nginx-selfsigned.crt"
         mode: "0400"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     # probably wanna convert old path into a variable
     - name: Move the nginx.pid file to "{{ nginx_pid }}"
