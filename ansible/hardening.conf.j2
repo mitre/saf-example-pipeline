@@ -14,7 +14,7 @@ server {
         
     location / {
         root   {{ nginx_site_root }};
-        auth_request /auth;
+        # auth_request /auth;
         # deny all;
         limit_conn                  {{ nginx_limit_conn }};
         limit_rate                  {{ nginx_limit_rate }};
