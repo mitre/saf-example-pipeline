@@ -89,69 +89,69 @@
       file:
         path: "{{ nginx_bin }}"
         mode: "550"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     - name: Ensure the "{{ nginx_conf_base }}" directory is not worldwide read- or writeable
       file:
         path: "{{ nginx_conf_base }}"
         mode: "770"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     - name: Create the "{{ nginx_conf_base }}/nginx.conf" file
       template:
         src: "etc-nginx.conf.j2"
         dest: "{{ nginx_conf_base }}/nginx.conf"
         mode: "0660"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
       notify: restart nginx
 
     - name: Ensure the "{{ nginx_conf_base }}/nginx.conf" file is not  worldwide read- or writeable
       file:
         path: "{{ nginx_conf_base }}/nginx.conf"
         mode: "660"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     - name: Ensure the "{{ nginx_conf_base }}/conf.d" directory is not worldwide read- or writeable
       file:
         path: "{{ nginx_conf_base }}/conf.d"
         mode: "770"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     - name: Ensure the "{{ nginx_modules_path }}" directory is not worldwide read- or writeable
       file:
         path: "{{ nginx_modules_path }}"
         mode: "770"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
         follow: "yes"
 
     - name: Ensure the "{{ nginx_log_path }}" log directory is not worldwide read- or writeable
       file:
         path: "{{ nginx_log_path }}"
         mode: "0750"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
 
     - name: Create the "{{ nginx_conf_base }}/conf.d/90.hardening.conf" file
       template:
         src: "hardening.conf.j2"
         dest: "{{ nginx_conf_base }}/conf.d/90.hardening.conf"
         mode: "0660"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
       notify: restart nginx
 
     - name: Set the permissions on the "{{ nginx_site_root }}" directory
       file:
         path: "{{ nginx_site_root }}"
         mode: "1660"
-        owner: "root"
-        group: "root"
+        owner: "nginx"
+        group: "nginx"
       notify: restart nginx
 
     - name: Add the limit_cone_zone to the "{{ nginx_conf_base }}/nginx.conf" file
