@@ -4,7 +4,9 @@
 
 ### Authors
 
+- Author:: Aaron Lippold [aaronlippold](https://github.com/aaronlippold)
 - Author:: Amndeep Singh Mann [Amndeep7](https://github.com/amndeep7)
+- Author:: Emily Rodriguez [em-c-rod](https://github.com/em-c-rod)
 
 ### NOTICE
 
