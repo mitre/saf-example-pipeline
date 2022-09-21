@@ -22,7 +22,7 @@ jobs:
       - name: Run scan
         run: |
           container_id=$(docker run -p 80:8080 -p 443:8443 --rm -d ghcr.io/mitre/app_on_hardened_nginx_on_ubi8:v1)
-          inspec exec https://github.com/mitre/redhat-enterprise-linux-8-stig-baseline/archive/main.tar.gz -t docker://"$container_id" --reporter=cli json:output.json
+          inspec exec https://github.com/mitre/redhat-enterprise-linux-8-stig-baseline/archive/main.tar.gz -t docker://"$container_id" --user root --reporter=cli json:output.json
       - name: Upload scan to heimdall
         if: success() || failure()
         run: |
@@ -36,7 +36,7 @@ jobs:
       - name: Run scan
         run: |
           container_id=$(docker run -p 80:8080 -p 443:8443 --rm -d ghcr.io/mitre/app_on_hardened_nginx_on_ubi8:v1)
-          inspec exec https://github.com/mitre/nginx-srg-baseline/archive/master.tar.gz -t docker://"$container_id" --reporter=cli json:output.json
+          inspec exec https://github.com/mitre/nginx-srg-baseline/archive/master.tar.gz -t docker://"$container_id" --user root --input-file inspec/nginx_inputs.yml --reporter=cli json:output.json
       - name: Upload scan to heimdall
         if: success() || failure()
         run: |

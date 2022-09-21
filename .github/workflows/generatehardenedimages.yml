@@ -24,18 +24,31 @@ jobs:
       - name: Install ansible dependencies
         run: |
           pipx inject ansible-core requests docker
+      - name: Run playbook to pull images and start containers
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: pull_images_and_start_containers.yml
+          directory: ./ansible
+      - name: Run playbook to harden nginx
+        uses: dawidd6/action-ansible-playbook@v2
+        with:
+          playbook: nginx_hardening.yml
+          directory: ./ansible
+          options: |
+            -i hosts.yml
+            -u root
       - name: Run playbook
         uses: dawidd6/action-ansible-playbook@v2
         with:
-          playbook: harden_nginx.yml
+          playbook: docker_commit.yml
           directory: ./ansible
-      - name: Create images # probably come up with some way to loop this across all the base images we wanna generate
+      - name: Create images # probably come up with some way to loop this across all the base images we wanna generate, also make the /etc/nginx/html somehow linked to the nginx_site_root var
         run: |
           docker build -t app_on_hardened_nginx_on_ubi8:v1 . -f-<<EOF
           FROM ironbank_nginx_1_23_1_hardened
           COPY src /etc/nginx/html
           EOF
-      - name: Push to ironbank base to GHCR # think this one is just gonna have to be fully manual
+      - name: Push to ironbank base to GHCR # think this one is just gonna have to be manually duplicated for all the images we make unless matrices??
         uses: redhat-actions/push-to-registry@v2
         with:
           image: app_on_hardened_nginx_on_ubi8

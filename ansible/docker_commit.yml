@@ -2,6 +2,14 @@
 - name: Harden NGINX playbook
   hosts: localhost
   tasks:
+    - name: Add container to inventory
+      ansible.builtin.add_host:
+        name: ironbank_nginx_1_23_1
+        groups: base_containers
+        ansible_connection: docker
+        ansible_user: nginx
+      changed_when: false
+
     - name: Commit hardened image
       ansible.builtin.command: docker commit "{{ item }}" "{{ item }}_hardened"
       loop: "{{ groups['base_containers'] }}"

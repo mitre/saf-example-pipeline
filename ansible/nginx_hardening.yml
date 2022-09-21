@@ -374,4 +374,4 @@
 
   handlers:
     - name: restart nginx
-      ansible.builtin.shell: nginx
+      ansible.builtin.shell: nginx -s reload

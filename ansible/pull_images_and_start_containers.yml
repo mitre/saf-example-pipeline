@@ -15,7 +15,7 @@
         name: ironbank_nginx_1_23_1
         image: registry1.dso.mil/ironbank/opensource/nginx/nginx
         pull: true
-        published_ports: ["80:8080", "443:8443"]
+        # published_ports: ["80:8080", "443:8443"]
 
     - name: Add container to inventory
       ansible.builtin.add_host:
@@ -26,9 +26,9 @@
       changed_when: false
 
     # swap this task out for all the actual hardening content
-    - name: Create test directory
-      delegate_to: "{{ item }}"
-      loop: "{{ groups['base_containers'] }}"
-      ansible.builtin.file:
-        path: "/tmp/make_this_other_dir"
-        state: directory
+    #     - name: Create test directory
+    #       delegate_to: "{{ item }}"
+    #       loop: "{{ groups['base_containers'] }}"
+    #       ansible.builtin.file:
+    #         path: "/tmp/make_this_other_dir"
+    #         state: directory
