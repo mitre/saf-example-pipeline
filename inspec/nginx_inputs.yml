@@ -1,0 +1,5 @@
+---
+org_allowed_nginx_version: 1.23.1
+uses_pki: false
+sys_admin: ["root"]
+sys_admin_group: ["root"]

@@ -31,7 +31,3 @@
       ansible.builtin.file:
         path: "/tmp/make_this_other_dir"
         state: directory
-
-    - name: Commit hardened image
-      ansible.builtin.command: docker commit "{{ item }}" "{{ item }}_hardened"
-      loop: "{{ groups['base_containers'] }}"

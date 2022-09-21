@@ -1,0 +1,7 @@
+---
+- name: Harden NGINX playbook
+  hosts: localhost
+  tasks:
+    - name: Commit hardened image
+      ansible.builtin.command: docker commit "{{ item }}" "{{ item }}_hardened"
+      loop: "{{ groups['base_containers'] }}"
