@@ -46,6 +46,7 @@ jobs:
         run: |
           docker build -t app_on_hardened_nginx_on_ubi8:v1 . -f-<<EOF
           FROM ironbank_nginx_1_23_1_hardened
+          USER nginx
           COPY src /etc/nginx/html
           EOF
       - name: Push to ironbank base to GHCR # think this one is just gonna have to be manually duplicated for all the images we make unless matrices??
