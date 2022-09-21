@@ -37,7 +37,7 @@ jobs:
           options: |
             -i hosts.yml
             -u root
-      - name: Run playbook
+      - name: Run playbook to generate new images from hardened containers
         uses: dawidd6/action-ansible-playbook@v2
         with:
           playbook: docker_commit.yml
