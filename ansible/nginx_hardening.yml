@@ -369,8 +369,9 @@
     # probably wanna convert old path into a variable
     - name: Move the nginx.pid file to "{{ nginx.pid }}"
       command: mv /var/cache/nginx/nginx.pid "{{ nginx.pid }}"
-      creates: "{{ nginx.pid }}"
-      removes: /var/cache/nginx/nginx.pid
+      args:
+        creates: "{{ nginx.pid }}"
+        removes: /var/cache/nginx/nginx.pid
 
     # un-setup actions
     - name: Uninstall openssl
