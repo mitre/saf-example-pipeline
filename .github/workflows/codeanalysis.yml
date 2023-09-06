@@ -10,7 +10,6 @@ env:
   SONARQUBE_PROJECT_KEY: "saf-example-pipeline"
 
 jobs:
-  # shouldn't sonarqube action fail if there's stuff wrong which like there deffo is
   code_analysis:
     name: Code analysis
     runs-on: ubuntu-20.04
